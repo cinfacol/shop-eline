@@ -34,13 +34,13 @@ pytest-django = "*"
 pytest-factoryboy = "*"
 faker = "*"
 pytest-cov = "*"
-redis3 = "*"
 celery = "*"
 flower = "*"
 django-celery-email = "*"
 argh = "*"
 pyyaml = "*"
 watchdog = "*"
+redis = "*"
 
 [dev-packages]
 

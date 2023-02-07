@@ -1,20 +1,20 @@
-import os
 from datetime import timedelta
 from pathlib import Path
 
 import environ
 
-env = environ.Env()
-environ.Env.read_env()
+env = environ.Env(DEBUG=(bool, False))
 
-ENVIRONMENT = env
+# ENVIRONMENT = env
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+environ.Env.read_env(BASE_DIR / ".env")
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = os.environ.get("DEBUG")
+SECRET_KEY = env("SECRET_KEY")
+
+DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -84,6 +84,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8080",
+    "http://localhost:8080",
+    "http://localhost:5557",
+    "http://127.0.0.1:5557",
+]
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -131,7 +142,7 @@ SIMPLE_JWT = {
     ),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "SIGNING_KEY": os.environ.get("SIGNING_KEY"),
+    "SIGNING_KEY": env("SIGNING_KEY"),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
@@ -185,7 +196,7 @@ logging.config.dictConfig(
                 "level": "INFO",
                 "class": "logging.FileHandler",
                 "formatter": "file",
-                "filename": "logs/real_estate.log",
+                "filename": "logs/shop_eline.log",
             },
             "django.server": DEFAULT_LOGGING["handlers"]["django.server"],
         },
