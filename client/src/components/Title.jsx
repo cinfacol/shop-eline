@@ -1,20 +1,23 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const Title = ({ title, description, keywords }) => {
 	return (
-		<Helmet>
-			<title>{title}</title>
-			<meta name="description" content={description} />
-			<meta name="keywords" content={keywords} />
-		</Helmet>
+		<HelmetProvider>
+			<Helmet>
+				<title>{title}</title>
+				<meta name="description" content={description} />
+				<meta name="keywords" content={keywords} />
+			</Helmet>
+		</HelmetProvider>
+
 	);
 };
 
 Title.defaultProps = {
 	title: "Welcome to Shop Eline",
-	description: "We sell the best properties in town",
-	keywords: "land, shop eline, best value",
+	description: "We sell the best products in town",
+	keywords: "product, shop eline, best value and quality",
 };
 
 export default Title;
