@@ -41,6 +41,10 @@ argh = "*"
 pyyaml = "*"
 watchdog = "*"
 redis = "*"
+django-allauth = "*"
+django-ckeditor = "*"
+django-cors-headers = "*"
+whitenoise = "*"
 
 [dev-packages]
 
