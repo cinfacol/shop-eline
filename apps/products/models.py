@@ -13,22 +13,22 @@ from apps.common.models import TimeStampedUUIDModel
 User = get_user_model()
 
 
-class PropertyPublishedManager(models.Manager):
+class ProductPublishedManager(models.Manager):
     def get_queryset(self):
         return (
-            super(PropertyPublishedManager, self)
+            super(ProductPublishedManager, self)
             .get_queryset()
             .filter(published_status=True)
         )
 
 
-class Property(TimeStampedUUIDModel):
+class Product(TimeStampedUUIDModel):
     class AdvertType(models.TextChoices):
         FOR_SALE = "For Sale", _("For Sale")
         FOR_RENT = "For Rent", _("For Rent")
         AUCTION = "Auction", _("Auction")
 
-    class PropertyType(models.TextChoices):
+    class ProductType(models.TextChoices):
         HOUSE = "House", _("House")
         APARTMENT = "Apartment", _("Apartment")
         OFFICE = "Office", _("Office")
@@ -39,14 +39,14 @@ class Property(TimeStampedUUIDModel):
     user = models.ForeignKey(
         User,
         verbose_name=_("Agent,Seller or Buyer"),
-        related_name="agent_buyer",
+        related_name="product_agent_buyer",
         on_delete=models.DO_NOTHING,
     )
 
-    title = models.CharField(verbose_name=_("Property Title"), max_length=250)
+    title = models.CharField(verbose_name=_("Product Title"), max_length=250)
     slug = AutoSlugField(populate_from="title", unique=True, always_update=True)
     ref_code = models.CharField(
-        verbose_name=_("Property Reference Code"),
+        verbose_name=_("Product Reference Code"),
         max_length=255,
         unique=True,
         blank=True,
@@ -67,8 +67,8 @@ class Property(TimeStampedUUIDModel):
     street_address = models.CharField(
         verbose_name=_("Street Address"), max_length=150, default="KG8 Avenue"
     )
-    property_number = models.IntegerField(
-        verbose_name=_("Property Number"),
+    product_number = models.IntegerField(
+        verbose_name=_("Product Number"),
         validators=[MinValueValidator(1)],
         default=112,
     )
@@ -76,11 +76,11 @@ class Property(TimeStampedUUIDModel):
         verbose_name=_("Price"), max_digits=8, decimal_places=2, default=0.0
     )
     tax = models.DecimalField(
-        verbose_name=_("Property Tax"),
+        verbose_name=_("Product Tax"),
         max_digits=6,
         decimal_places=2,
         default=0.15,
-        help_text="15% property tax charged",
+        help_text="15% product tax charged",
     )
     plot_area = models.DecimalField(
         verbose_name=_("Plot Area(m^2)"), max_digits=8, decimal_places=2, default=0.0
@@ -97,11 +97,11 @@ class Property(TimeStampedUUIDModel):
         default=AdvertType.FOR_SALE,
     )
 
-    property_type = models.CharField(
-        verbose_name=_("Property Type"),
+    product_type = models.CharField(
+        verbose_name=_("Product Type"),
         max_length=50,
-        choices=PropertyType.choices,
-        default=PropertyType.OTHER,
+        choices=ProductType.choices,
+        default=ProductType.OTHER,
     )
 
     cover_photo = models.ImageField(
@@ -133,13 +133,13 @@ class Property(TimeStampedUUIDModel):
     views = models.IntegerField(verbose_name=_("Total Views"), default=0)
 
     objects = models.Manager()
-    published = PropertyPublishedManager()
+    published = ProductPublishedManager()
 
     def __str__(self):
         return self.title
 
     class Meta:
-        verbose_name = "Property"
+        verbose_name = "Product"
         verbose_name_plural = "Properties"
 
     def save(self, *args, **kwargs):
@@ -148,30 +148,30 @@ class Property(TimeStampedUUIDModel):
         self.ref_code = "".join(
             random.choices(string.ascii_uppercase + string.digits, k=10)
         )
-        super(Property, self).save(*args, **kwargs)
+        super(Product, self).save(*args, **kwargs)
 
     @property
-    def final_property_price(self):
+    def final_product_price(self):
         tax_percentage = self.tax
-        property_price = self.price
-        tax_amount = round(tax_percentage * property_price, 2)
-        price_after_tax = float(round(property_price + tax_amount, 2))
+        product_price = self.price
+        tax_amount = round(tax_percentage * product_price, 2)
+        price_after_tax = float(round(product_price + tax_amount, 2))
         return price_after_tax
 
 
-class PropertyViews(TimeStampedUUIDModel):
+class ProductViews(TimeStampedUUIDModel):
     ip = models.CharField(verbose_name=_("IP Address"), max_length=250)
-    property = models.ForeignKey(
-        Property, related_name="property_views", on_delete=models.CASCADE
+    product = models.ForeignKey(
+        Product, related_name="product_views", on_delete=models.CASCADE
     )
 
     def __str__(self):
         return (
-            f"Total views on - {self.property.title} is - {self.property.views} view(s)"
+            f"Total views on - {self.product.title} is - {self.product.views} view(s)"
         )
 
     class Meta:
-        verbose_name = "Total Views on Property"
-        verbose_name_plural = "Total Property Views"
+        verbose_name = "Total Views on Product"
+        verbose_name_plural = "Total Product Views"
         """_summary_
         """

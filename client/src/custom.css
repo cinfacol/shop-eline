@@ -27,6 +27,17 @@ a {
 	border-radius: 15px;
 }
 
+.product-price {
+	font-size: 23px;
+	z-index: 20;
+	font-weight: 700;
+	color: white;
+	position: absolute;
+	margin-top: 133px;
+	background: #0000007a;
+	border-radius: 15px;
+}
+
 /* footer */
 footer {
 	background-color: #0000001c;

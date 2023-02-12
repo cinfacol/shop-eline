@@ -48,12 +48,12 @@ class Profile(TimeStampedUUIDModel):
     is_buyer = models.BooleanField(
         verbose_name=_("Buyer"),
         default=False,
-        help_text=_("Are you looking to Buy a Property?"),
+        help_text=_("Are you looking to Buy a Product?"),
     )
     is_seller = models.BooleanField(
         verbose_name=_("Seller"),
         default=False,
-        help_text=_("Are you looking to sell a property?"),
+        help_text=_("Are you looking to sell a product?"),
     )
     is_agent = models.BooleanField(
         verbose_name=_("Agent"), default=False, help_text=_("Are you an agent?")
