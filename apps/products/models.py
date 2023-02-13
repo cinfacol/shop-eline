@@ -57,10 +57,10 @@ class Product(TimeStampedUUIDModel):
     )
     country = CountryField(
         verbose_name=_("Country"),
-        default="KE",
+        default="CO",
         blank_label="(select country)",
     )
-    city = models.CharField(verbose_name=_("City"), max_length=180, default="Nairobi")
+    city = models.CharField(verbose_name=_("City"), max_length=180, default="Cali")
     postal_code = models.CharField(
         verbose_name=_("Postal Code"), max_length=100, default="140"
     )
@@ -140,7 +140,7 @@ class Product(TimeStampedUUIDModel):
 
     class Meta:
         verbose_name = "Product"
-        verbose_name_plural = "Properties"
+        verbose_name_plural = "Products"
 
     def save(self, *args, **kwargs):
         self.title = str.title(self.title)
