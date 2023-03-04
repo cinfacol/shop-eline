@@ -27,9 +27,9 @@ if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 DJANGO_APPS = [
+    "django.contrib.contenttypes",
     "django.contrib.admin",
     "django.contrib.auth",
-    "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
@@ -207,7 +207,6 @@ REST_FRAMEWORK = {
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 SIMPLE_JWT = {
@@ -242,7 +241,7 @@ DJOSER = {
         "http://localhost:8000/facebook",
     ],
     "SERIALIZERS": {
-        "user_create": "apps.users.serializers.CreateUserSerializer,",
+        "user_create": "apps.users.serializers.CreateUserSerializer",
         "user": "apps.users.serializers.UserSerializer",
         "current_user": "apps.users.serializers.UserSerializer",
         "user_delete": "djoser.serializers.UserDeleteSerializer",
