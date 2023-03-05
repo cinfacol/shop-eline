@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "./components/Footer";
-import Header from "./components/Header";
 import NotFound from "./components/NotFound";
 import ActivatePage from "./pages/ActivatePage";
 import HomePage from "./pages/HomePage";
@@ -14,8 +13,6 @@ import RegisterPage from "./pages/RegisterPage";
 function App () {
 	return (
 		<Router>
-			<Header />
-			<main className="py-3">
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route
@@ -31,7 +28,6 @@ function App () {
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 				<ToastContainer theme="dark" />
-			</main>
 			<Footer />
 		</Router>
 	);
