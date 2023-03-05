@@ -1,34 +1,22 @@
-// import React from 'react'
-
-// const Navbar = () => {
-//   return (
-//     <div>Navbar</div>
-//   )
-// }
-
-// export default Navbar
-
 import { Fragment } from 'react';
-import { Popover, Transition } from '@headlessui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Popover, Transition, Menu } from '@headlessui/react';
+
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import BookmarkIcon from '@heroicons/react/24/outline';
-import BriefcaseIcon from '@heroicons/react/24/outline';
-import BuildingOfficeIcon from '@heroicons/react/24/outline';
-import ChartBarIcon from '@heroicons/react/24/outline';
-import CheckCircleIcon from '@heroicons/react/24/outline';
-import CursorArrowRaysIcon from '@heroicons/react/24/outline';
-import DeviceTabletIcon from '@heroicons/react/24/outline';
-import GlobeAltIcon from '@heroicons/react/24/outline';
-import InformationCircleIcon from '@heroicons/react/24/outline';
-import NewspaperIcon from '@heroicons/react/24/outline';
-import PhoneIcon from '@heroicons/react/24/outline';
-import PlayIcon from '@heroicons/react/24/outline';
-import ShieldCheckIcon from '@heroicons/react/24/outline';
-import UserGroupIcon from '@heroicons/react/24/outline';
-import ViewColumnsIcon from '@heroicons/react/24/outline';
-// import XMarkIcon from '@heroicons/react/24/outline';
-import ChevronDownIcon from '@heroicons/react/24/solid';
+import {ChartBarIcon} from '@heroicons/react/24/outline';
+import {CheckCircleIcon} from '@heroicons/react/24/outline';
+import {CursorArrowRaysIcon} from '@heroicons/react/24/outline';
+import {PhoneIcon} from '@heroicons/react/24/outline';
+import {PlayIcon} from '@heroicons/react/24/outline';
+import {ShieldCheckIcon} from '@heroicons/react/24/outline';
+import {ViewColumnsIcon} from '@heroicons/react/24/outline';
+import {XMarkIcon} from '@heroicons/react/24/outline';
+import {ChevronDownIcon} from '@heroicons/react/24/solid';
+import {HeartIcon} from '@heroicons/react/24/solid';
+import {ShoppingCartIcon} from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
+import { logout, reset } from '../../features/auth/authSlice';
 
 const solutions = [
   {
@@ -56,19 +44,6 @@ const callsToAction = [
   { name: 'View All Products', href: '#', icon: CheckCircleIcon },
   { name: 'Contact Sales', href: '#', icon: PhoneIcon },
 ]
-const company = [
-  { name: 'About', href: '#', icon: InformationCircleIcon },
-  { name: 'Customers', href: '#', icon: BuildingOfficeIcon },
-  { name: 'Press', href: '#', icon: NewspaperIcon },
-  { name: 'Careers', href: '#', icon: BriefcaseIcon },
-  { name: 'Privacy', href: '#', icon: ShieldCheckIcon },
-]
-const resources = [
-  { name: 'Community', href: '#', icon: UserGroupIcon },
-  { name: 'Partners', href: '#', icon: GlobeAltIcon },
-  { name: 'Guides', href: '#', icon: BookmarkIcon },
-  { name: 'Webinars', href: '#', icon: DeviceTabletIcon },
-]
 const blogPosts = [
   {
     id: 1,
@@ -93,27 +68,175 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+  const logoutHandler = () => {
+		dispatch(logout());
+		dispatch(reset());
+		navigate("/");
+	};
+
+  const authLinks = (
+    <Menu as="div" className="relative inline-block text-left">
+      <div>
+        <Menu.Button className="inline-flex justify-center w-full rounded-full  text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+          <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
+            <img
+              className="h-full w-full rounded-full"
+              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt=""
+            />
+          </span>
+        </Menu.Button>
+      </div>
+
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-40 md:w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="py-1">
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  to="/dashboard"
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm'
+                  )}
+                >
+                  Dashboard
+                </Link>
+              )}
+            </Menu.Item>
+            <form onSubmit={logoutHandler} method="POST">
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    onClick={logoutHandler}
+                    type='submit'
+                    className={classNames(
+                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                      'block w-full text-left px-4 py-2 text-sm'
+                    )}
+                  >
+                    Log out
+                  </button>
+                )}
+              </Menu.Item>
+            </form>
+          </div>
+        </Menu.Items>
+      </Transition>
+    </Menu>
+  )
+
+  const guestLinks = (
+    <Menu as="div" className="relative inline-block text-left">
+      <div>
+        <Menu.Button className="inline-flex justify-center w-full rounded-full  text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
+          <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
+            <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </span>
+        </Menu.Button>
+      </div>
+
+      <Transition
+        as={Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-40 md:w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="py-1">
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  to="/login"
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm'
+                  )}
+                >
+                  Login
+                </Link>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <Link
+                  to="/register"
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm'
+                  )}
+                >
+                  Sign up
+                </Link>
+              )}
+            </Menu.Item>
+          </div>
+        </Menu.Items>
+      </Transition>
+    </Menu>
+  )
   return (
     <Popover className="relative bg-white">
       <div className="absolute inset-0 shadow z-30 pointer-events-none" aria-hidden="true" />
       <div className="relative z-20">
         <div className="max-w-7xl mx-auto flex justify-between items-center px-4 py-5 sm:px-6 sm:py-4 lg:px-8 md:justify-start md:space-x-10">
-          <div>
-            <Link to="/" className="flex">
-              <span className="sr-only">Workflow</span>
-              <img
-                className="h-8 w-auto sm:h-10"
-                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-                alt=""
-              />
-            </Link>
+
+          {/* div visible para todos los tamaños */}
+          <div className="flex items-center ml-2">
+            <div>
+              <Link to='/' className="flex">
+                <span className="sr-only">Workflow</span>
+                <img
+                  className="h-8 w-auto sm:h-10"
+                  src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                  alt=""
+                />
+              </Link>
+            </div>
+
+            {/* div visible solo moviles */}
+            <div className='md:hidden ml-14'>
+              <div className='flex items-center justify-between space-x-3'>
+                <div>
+                  {user ? user.first_name : 'Invitado'}
+                </div>
+                {user ? authLinks : guestLinks }
+                <div className='mt-5'>
+                  <Link to="/">
+                    <ShoppingCartIcon className="h-8 w-8 cursor-pointer text-gray-300 md:mr-6 mr-4" />
+                    <span className="text-xs relative bottom-10 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">2</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* div visible solo para moviles */}
           <div className="-mr-2 -my-2 md:hidden">
             <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
               <span className="sr-only">Open menu</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </Popover.Button>
           </div>
+
+          {/* div oculto para moviles Menu principal (Solutions, shop, Docs, Categories) */}
           <div className="hidden md:flex-1 md:flex md:items-center md:justify-between">
             <Popover.Group as="nav" className="flex space-x-10">
               <Popover>
@@ -126,13 +249,13 @@ export default function Navbar() {
                       )}
                     >
                       <span>Solutions</span>
-                      {/* <ChevronDownIcon
+                      {<ChevronDownIcon
                         className={classNames(
                           open ? 'text-gray-600' : 'text-gray-400',
                           'ml-2 h-5 w-5 group-hover:text-gray-500'
                         )}
                         aria-hidden="true"
-                      /> */}
+                      />}
                     </Popover.Button>
 
                     <Transition
@@ -155,7 +278,7 @@ export default function Navbar() {
                               <div className="flex md:h-full lg:flex-col">
                                 <div className="flex-shrink-0">
                                   <span className="inline-flex items-center justify-center h-10 w-10 rounded-md bg-indigo-500 text-white sm:h-12 sm:w-12">
-                                    {/* <item.icon className="h-6 w-6" aria-hidden="true" /> */}
+                                    <item.icon className="h-6 w-6" aria-hidden="true" />
                                   </span>
                                 </div>
                                 <div className="ml-4 md:flex-1 md:flex md:flex-col md:justify-between lg:ml-0 lg:mt-4">
@@ -179,7 +302,7 @@ export default function Navbar() {
                                   to={item.href}
                                   className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-100"
                                 >
-                                  {/* <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" /> */}
+                                  <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" />
                                   <span className="ml-3">{item.name}</span>
                                 </Link>
                               </div>
@@ -191,12 +314,21 @@ export default function Navbar() {
                   </>
                 )}
               </Popover>
-              <Link to="/" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                Pricing
-              </Link>
+              <NavLink to='/shop' className="text-base font-medium text-gray-500 hover:text-gray-900">
+                Shop
+              </NavLink>
               <Link to="/" className="text-base font-medium text-gray-500 hover:text-gray-900">
                 Docs
               </Link>
+              {/* {
+                (location.pathname !== '/search') ?
+                <SearchBox
+                  search={search}
+                  onChange={onChange}
+                  onSubmit={onSubmit}
+                  categories={categorias}
+                /> : <></>
+              } */}
               <Popover>
                 {({ open }) => (
                   <>
@@ -206,14 +338,14 @@ export default function Navbar() {
                         'group bg-white rounded-md inline-flex items-center text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                       )}
                     >
-                      <span>More</span>
-                      {/* <ChevronDownIcon
+                      <span>Categorías</span>
+                      <ChevronDownIcon
                         className={classNames(
                           open ? 'text-gray-600' : 'text-gray-400',
                           'ml-2 h-5 w-5 group-hover:text-gray-500'
                         )}
                         aria-hidden="true"
-                      /> */}
+                      />
                     </Popover.Button>
 
                     <Transition
@@ -232,38 +364,25 @@ export default function Navbar() {
                         </div>
                         <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
                           <nav className="grid gap-y-10 px-4 py-8 bg-white sm:grid-cols-2 sm:gap-x-8 sm:py-12 sm:px-6 lg:px-8 xl:pr-12">
-                            <div>
-                              <h3 className="text-sm font-medium tracking-wide text-gray-500 uppercase">Company</h3>
-                              <ul className="mt-5 space-y-6">
-                                {company.map((item) => (
-                                  <li key={item.name} className="flow-root">
-                                    <Link
-                                      to={item.href}
-                                      className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-50"
-                                    >
-                                      {/* <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" /> */}
-                                      <span className="ml-4">{item.name}</span>
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                            <div>
-                              <h3 className="text-sm font-medium tracking-wide text-gray-500 uppercase">Resources</h3>
-                              <ul className="mt-5 space-y-6">
-                                {resources.map((item) => (
-                                  <li key={item.name} className="flow-root">
-                                    <Link
-                                      to={item.href}
-                                      className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-50"
-                                    >
-                                      {/* <item.icon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" /> */}
-                                      <span className="ml-4">{item.name}</span>
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
+                            {/* {(categorias && (categorias.length > 0)) && (categorias.map((item) => (
+                                <div key={item.id}>
+                                  <h3 className="text-sm font-medium tracking-wide text-gray-500 uppercase">{(item.sub_categories.length > 0) && item.name}</h3>
+                                  <ul className="mt-5 space-y-6">
+                                    {item.sub_categories && item.sub_categories.map((sub_item) => (
+                                      <li key={sub_item.id} className="flow-root">
+                                        <Link
+                                          to="/"
+                                          className="-m-3 p-3 flex items-center rounded-md text-base font-medium text-gray-900 hover:bg-gray-50"
+                                        >
+                                          <CheckCircleIcon className="flex-shrink-0 h-6 w-6 text-gray-400" aria-hidden="true" />
+                                          <span className="ml-4 text-small">{sub_item.name}</span>
+
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )))} */}
                           </nav>
                           <div className="bg-gray-50 px-4 py-8 sm:py-12 sm:px-6 lg:px-8 xl:pl-12">
                             <div>
@@ -301,15 +420,20 @@ export default function Navbar() {
               </Popover>
             </Popover.Group>
             <div className="flex items-center md:ml-12">
-              <Link to="/" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                Sign in
+              <div className='flex items-center md:mr-6 md:justify-between md:space-x-5'>
+                <div>{user ? user.first_name : 'Invitado'}</div>
+                {user ? authLinks : guestLinks }
+              </div>
+              <Link to="/cart">
+                <ShoppingCartIcon className="h-8 w-8 cursor-pointer text-gray-300 lg:mr-6 mr-4" />
+                <span className="text-xs absolute top-1 mt-11 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">2</span>
               </Link>
-              <Link
-                to="/"
-                className="ml-8 inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-              >
-                Sign up
+              {user &&
+              <Link to="/wishlist">
+                <HeartIcon className="h-8 w-8 cursor-pointer text-gray-300 lg:mr-6 mr-4" />
+                <span className="text-xs absolute top-1 mt-11 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">1</span>
               </Link>
+              }
             </div>
           </div>
         </div>
@@ -324,6 +448,7 @@ export default function Navbar() {
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
       >
+        {/* popover.panel visible solo moviles al dar click en el logo menu (las 3 rayitas) Shop, Docs, Categorías, Resources, Blog, Contact Sales */}
         <Popover.Panel
           focus
           className="absolute z-30 top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden"
@@ -341,7 +466,7 @@ export default function Navbar() {
                 <div className="-mr-2">
                   <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                     <span className="sr-only">Close menu</span>
-                    {/* <XMarkIcon className="h-6 w-6" aria-hidden="true" /> */}
+                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </Popover.Button>
                 </div>
               </div>
@@ -355,7 +480,7 @@ export default function Navbar() {
                         className="-m-3 flex items-center p-3 rounded-lg hover:bg-gray-50"
                       >
                         <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-md bg-indigo-500 text-white sm:h-12 sm:w-12">
-                          {/* <item.icon className="h-6 w-6" aria-hidden="true" /> */}
+                          <item.icon className="h-6 w-6" aria-hidden="true" />
                         </div>
                         <div className="ml-4 text-base font-medium text-gray-900">{item.name}</div>
                       </Link>
@@ -372,43 +497,15 @@ export default function Navbar() {
             </div>
             <div className="py-6 px-5">
               <div className="grid grid-cols-2 gap-4">
-                <Link to="/" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
-                  Pricing
+                <Link to='/shop' className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                  Shop
                 </Link>
-
-                <Link to="/" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
-                  Docs
+                <Link to='/' className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                  Categorías
                 </Link>
-
-                <Link to="/" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
-                  Company
-                </Link>
-
-                <Link to="/" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
-                  Resources
-                </Link>
-
-                <Link to="/" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
-                  Blog
-                </Link>
-
-                <Link to="/" className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
+                <Link to='/' className="rounded-md text-base font-medium text-gray-900 hover:text-gray-700">
                   Contact Sales
                 </Link>
-              </div>
-              <div className="mt-6">
-                <Link
-                  to="/"
-                  className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                >
-                  Sign up
-                </Link>
-                <p className="mt-6 text-center text-base font-medium text-gray-500">
-                  Existing customer?{' '}
-                  <Link to="/" className="text-indigo-600 hover:text-indigo-500">
-                    Sign in
-                  </Link>
-                </p>
               </div>
             </div>
           </div>

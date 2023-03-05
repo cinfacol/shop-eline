@@ -5,14 +5,14 @@ const LOGIN_URL = "/api/v1/auth/jwt/create/";
 const ACTIVATE_URL = "/api/v1/auth/users/activation/";
 
 // Register user
-const register = async (userData) => {
+const register = async ({userData}) => {
 	const config = {
 		headers: {
 			"Content-Type": "application/json",
 		},
 	};
 
-	const response = await axios.post(REGISTER_URL, userData, config);
+	const response = await axios.post(REGISTER_URL, {userData}, config);
 	return response.data;
 };
 
