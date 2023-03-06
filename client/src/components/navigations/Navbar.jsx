@@ -72,6 +72,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
+  const isLogged = useSelector((state) => state.auth.isLoggedIn);
   const logoutHandler = () => {
 		dispatch(logout());
 		dispatch(reset());
@@ -217,7 +218,7 @@ export default function Navbar() {
                 <div>
                   {user ? user.first_name : 'Invitado'}
                 </div>
-                {user ? authLinks : guestLinks }
+                {isLogged ? authLinks : guestLinks }
                 <div className='mt-5'>
                   <Link to="/">
                     <ShoppingCartIcon className="h-8 w-8 cursor-pointer text-gray-300 md:mr-6 mr-4" />
@@ -421,14 +422,14 @@ export default function Navbar() {
             </Popover.Group>
             <div className="flex items-center md:ml-12">
               <div className='flex items-center md:mr-6 md:justify-between md:space-x-5'>
-                <div>{user ? user.first_name : 'Invitado'}</div>
-                {user ? authLinks : guestLinks }
+                <div>{isLogged ? user.first_name : 'Invitado'}</div>
+                {isLogged ? authLinks : guestLinks }
               </div>
               <Link to="/cart">
                 <ShoppingCartIcon className="h-8 w-8 cursor-pointer text-gray-300 lg:mr-6 mr-4" />
                 <span className="text-xs absolute top-1 mt-11 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">2</span>
               </Link>
-              {user &&
+              {isLogged &&
               <Link to="/wishlist">
                 <HeartIcon className="h-8 w-8 cursor-pointer text-gray-300 lg:mr-6 mr-4" />
                 <span className="text-xs absolute top-1 mt-11 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">1</span>

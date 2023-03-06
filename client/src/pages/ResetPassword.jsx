@@ -1,82 +1,71 @@
-import Layout from "../hocs/Layout";
-import { useEffect } from "react";
-import { Formik, Field, Form, ErrorMessage } from 'formik';
-import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import Layout from '../hocs/Layout';
+import { useSelector, useDispatch } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { reset_password } from '../features/auth/authSlice';
+// import { useNotification } from '../../hooks/useNotification';
 import { Oval } from 'react-loader-spinner';
-import Title from "../components/Title";
-import { login, reset } from "../features/auth/authSlice";
+import { useEffect } from 'react';
+import { reset } from '../features/auth/authSlice';
 
-const LoginPage = () => {
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
+const ResetPassword = ({ status }) => {
 
-	const { isLogged, isLoading, isError, isSuccess, message } = useSelector(
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { isLoading, isPassResetSend, isError, isSuccess, message } = useSelector(
 		(state) => state.auth
 	);
 
-	const initialValues = {
-    email: '',
-    password: '',
-  };
-
-	const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('This is not a valid email.')
-      .required('This field is required!'),
-    password: Yup.string()
-      .test(
-        'len',
-        'The password must be between 6 and 40 characters.',
-        (val) =>
-          val &&
-          val.toString().length >= 6 &&
-          val.toString().length <= 40
-      )
-      .required('This field is required!'),
-  });
-
-	useEffect(() => {
+  useEffect(() => {
 		if (isError) {
 			toast.error(message);
 		}
 
-		if (isSuccess || isLogged) {
+		if (isSuccess || isPassResetSend) {
 			navigate("/");
+			toast.success(
+				'El enlace para tu nueva contraseña ha sido enviado a tu correo, sigue, o copia, el link e ingresa tu nueva contraseña'
+			);
 		}
+    dispatch(reset());
+	}, [isError, isSuccess, message, isPassResetSend, navigate, dispatch]);
 
-		dispatch(reset());
-	}, [isError, isSuccess, message, isLogged, navigate, dispatch]);
+  const passwordResetSend = useSelector(state => state.auth.isPassResetSend);
 
-	const submitHandler = (formValue) => {
-		const {
-			email,
-			password,
-		} = formValue;
+  // const loading = useSelector(state => state.auth.status);
 
-		dispatch(login({ email, password }));
-	};
+  const initialValues = {
+    email: ''
+  };
 
-	return (
-		<Layout>
-			<Title title="login" />
-			{
-        isLogged ? <Navigate to='/' /> :
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('This is not a valid email.')
+      .required('This field is required!'),
+  });
+
+  const handleResetPassword = (formValue) => {
+    const {
+      email,
+    } = formValue;
+
+    dispatch(reset_password({ email }))
+  };
+
+  return (
+    <Layout>
+      {
+        passwordResetSend ? <Navigate to='/' /> :
         <div className='min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
           <div className='sm:mx-auto sm:w-full sm:max-w-md'>
             <svg className='mx-auto w-12 h-12 text-gray-400' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
               <path fillRule='evenodd' d='M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z' clipRule='evenodd'></path>
             </svg>
             <div className='sm:mx-auto sm:w-full sm:max-w-md'>
-              <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>Autentícate</h2>
-              <p className="mt-2 text-center text-sm text-gray-600">
-                Or{' '}
-                <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Regístrate
-                </Link>
-              </p>
+              <h2 className='mt-6 text-center text-3xl font-extrabold text-gray-900'>Reset Password</h2>
             </div>
           </div>
           <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
@@ -84,7 +73,7 @@ const LoginPage = () => {
               <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
-                onSubmit={submitHandler}
+                onSubmit={handleResetPassword}
               >
                 <Form>
                   <div>
@@ -106,29 +95,10 @@ const LoginPage = () => {
                         />
                       </div>
                     </div>
-
-                    <div className='mt-5'>
-                      <label htmlFor='password' className='block text-sm font-medium text-gray-700'>
-                        Contraseña
-                      </label>
-                      <div className='mt-1'>
-                        <Field
-                          name='password'
-                          type='password'
-                          className='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
-                          placeholder='Ingrese su Contraseña'
-                        />
-                        <ErrorMessage
-                          name='password'
-                          component='div'
-                          className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'
-                        />
-                      </div>
-                    </div>
                     <div className='mt-5'>
                       {(isLoading === true) ?
                         <button
-                        type='button'
+                          type='button'
                           className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                         >
                           <Oval
@@ -141,14 +111,9 @@ const LoginPage = () => {
                           type='submit'
                           className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                         >
-                          Log In
+                          Send Email
                         </button>
                       }
-                    </div>
-                    <div className="text-sm mt-4">
-                      <Link to="/reset_password" className="font-medium text-indigo-600 hover:text-indigo-500">
-                        ¿Olvidaste tu contraseña?
-                      </Link>
                     </div>
                   </div>
                 </Form>
@@ -157,8 +122,9 @@ const LoginPage = () => {
           </div>
         </div>
       }
-		</Layout>
-	);
-};
 
-export default LoginPage;
+    </Layout>
+  )
+}
+
+export default ResetPassword;

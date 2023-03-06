@@ -17,7 +17,9 @@ const RegisterPage = () => {
 		(state) => state.auth
 	);
 
-	const usuario = user && user.first_name;
+  const isLogged = useSelector((state) => state.auth.isLoggedIn);
+
+	const usuario = isLogged && user.first_name;
 
 	useEffect(() => {
 		if (isError) {
@@ -93,16 +95,16 @@ const RegisterPage = () => {
   });
 
 
-	const submitHandler = (username, first_name, last_name, email, password, re_password) => {
-		const userData = {
+	const submitHandler = (userData) => {
+		const {
 			username,
 			first_name,
 			last_name,
 			email,
 			password,
 			re_password,
-		};
-		dispatch(register({userData}));
+		} = userData;
+		dispatch(register({username, first_name, last_name, email, password, re_password}));
 	};
 	return (
 		<Layout>
