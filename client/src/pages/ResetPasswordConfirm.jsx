@@ -8,6 +8,7 @@ import { reset, reset_password_confirm } from '../features/auth/authSlice';
 import { Oval } from 'react-loader-spinner';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import Title from '../components/Title';
 
 const ResetPasswordConfirm = () => {
 
@@ -69,6 +70,7 @@ const ResetPasswordConfirm = () => {
 
   return (
     <Layout>
+      <Title title="Reset Password Confirm" />
       {
         isPassResetSend ? <Navigate to='/login' /> :
         <div className='min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8'>

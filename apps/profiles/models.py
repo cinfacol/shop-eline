@@ -15,13 +15,21 @@ class Gender(models.TextChoices):
     OTHER = "Other", _("Other")
 
 
+class VerificationType(models.TextChoices):
+    UNVERIFIED = "Unverified", _("Unverified")
+    VERIFIED = "Verified", _("Verified")
+
+
 class Profile(TimeStampedUUIDModel):
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     phone_number = PhoneNumberField(
-        verbose_name=_("Phone Number"), max_length=30, default="+41524204242"
+        verbose_name=_("Phone Number"),
+        max_length=30,
+        region="CO",
+        default="+575242042421",
     )
     about_me = models.TextField(
-        verbose_name=_("About me"), default="say something about yourself"
+        verbose_name=_("About me"), default=_("say something about yourself")
     )
     license = models.CharField(
         verbose_name=_("Shop Eline license"), max_length=20, blank=True, null=True
@@ -35,13 +43,19 @@ class Profile(TimeStampedUUIDModel):
         default=Gender.OTHER,
         max_length=20,
     )
+    verified = models.CharField(
+        verbose_name=_("Verified"),
+        choices=VerificationType.choices,
+        default=VerificationType.UNVERIFIED,
+        max_length=20,
+    )
     country = CountryField(
-        verbose_name=_("Country"), default="KE", blank=False, null=False
+        verbose_name=_("Country"), default="CO", blank=False, null=False
     )
     city = models.CharField(
         verbose_name=_("City"),
         max_length=180,
-        default="Nairobi",
+        default="Medellín",
         blank=False,
         null=False,
     )

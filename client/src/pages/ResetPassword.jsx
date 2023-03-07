@@ -5,10 +5,10 @@ import { toast } from "react-toastify";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { reset_password } from '../features/auth/authSlice';
-// import { useNotification } from '../../hooks/useNotification';
 import { Oval } from 'react-loader-spinner';
 import { useEffect } from 'react';
 import { reset } from '../features/auth/authSlice';
+import Title from '../components/Title';
 
 const ResetPassword = ({ status }) => {
 
@@ -35,8 +35,6 @@ const ResetPassword = ({ status }) => {
 
   const passwordResetSend = useSelector(state => state.auth.isPassResetSend);
 
-  // const loading = useSelector(state => state.auth.status);
-
   const initialValues = {
     email: ''
   };
@@ -57,6 +55,7 @@ const ResetPassword = ({ status }) => {
 
   return (
     <Layout>
+      <Title title="Reset Password" />
       {
         passwordResetSend ? <Navigate to='/' /> :
         <div className='min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8'>

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import Layout from "../hocs/Layout";
+import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -25,7 +26,7 @@ const PropertiesPage = () => {
 		return <Spinner />;
 	}
 	return (
-		<>
+		<Layout>
 			<Title title="Our Properties Catalog" />
 			<Container>
 				<Row>
@@ -52,7 +53,7 @@ const PropertiesPage = () => {
 					</>
 				}
 			</Container>
-		</>
+		</Layout>
 	);
 };
 
