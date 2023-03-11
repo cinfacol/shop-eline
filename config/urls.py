@@ -5,13 +5,13 @@ from django.urls import include, path
 
 urlpatterns = [
     path("supersecret/", admin.site.urls),
-    path("api/v1/auth/", include("djoser.urls")),
-    path("api/v1/auth/", include("djoser.urls.jwt")),
-    path("api/v1/profile/", include("apps.profiles.urls")),
-    path("api/v1/properties/", include("apps.properties.urls")),
-    path("api/v1/products/", include("apps.products.urls")),
-    path("api/v1/ratings/", include("apps.ratings.urls")),
-    path("api/v1/enquiries/", include("apps.enquiries.urls")),
+    path("api/auth/", include("djoser.urls")),
+    path("api/auth/", include("djoser.urls.jwt")),
+    path("api/profile/", include("apps.profiles.urls")),
+    path("api/properties/", include("apps.properties.urls")),
+    path("api/products/", include("apps.products.urls")),
+    path("api/ratings/", include("apps.ratings.urls")),
+    path("api/enquiries/", include("apps.enquiries.urls")),
 ]
 
 admin.site.site_header = "Shop Eline Admin"

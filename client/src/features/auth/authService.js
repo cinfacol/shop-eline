@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const REGISTER_URL = "/api/v1/auth/users/";
-const GET_USER_URL = "/api/v1/auth/users/me/";
-const LOGIN_URL = "/api/v1/auth/jwt/create/";
-const ACTIVATE_URL = "/api/v1/auth/users/activation/";
-const RESET_PASS_URL = "/api/v1/auth/users/reset_password/";
-const RESET_PASS_CONFIRM_URL = "/api/v1/auth/users/reset_password_confirm/";
+const REGISTER_URL = "/api/auth/users/";
+const GET_USER_URL = "/api/auth/users/me/";
+const LOGIN_URL = "/api/auth/jwt/create/";
+const ACTIVATE_URL = "/api/auth/users/activation/";
+const RESET_PASS_URL = "/api/auth/users/reset_password/";
+const RESET_PASS_CONFIRM_URL = "/api/auth/users/reset_password_confirm/";
 
 // Register user
 export const register = createAsyncThunk(

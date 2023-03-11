@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const PROFILE_API_URL = "api/v1/profile/user"
-// const UPDATE_PROFILE_API_URL = "api/v1/profile/update"
+const PROFILE_API_URL = "api/profile/user"
+// const UPDATE_PROFILE_API_URL = "api/profile/update"
 
 export const getProfile = createAsyncThunk(
   "profile/get_profile",
