@@ -3,13 +3,11 @@ import authReducer from "../features/auth/authSlice";
 import propertyReducer from "../features/properties/propertySlice";
 import profileReducer from "../features/profiles/profileSlice"
 
-const reducer = {
-	properties: propertyReducer,
-	auth: authReducer,
-	profile: profileReducer,
-}
-
 export const store = configureStore({
-	reducer,
+	reducer: {
+		properties: propertyReducer,
+		auth: authReducer,
+		profile: profileReducer,
+	},
 	devTools:true,
 });

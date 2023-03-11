@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import authService from "./authService";
+import authService, { register, login, getUser } from "./authService"
 
 const user = JSON.parse(localStorage.getItem("user"));
 
@@ -14,42 +14,9 @@ const initialState = {
 	message: "",
 };
 
-export const register = createAsyncThunk(
-	"auth/register",
-	async ({ username, first_name, last_name, email, password, re_password }, thunkAPI) => {
-		try {
-			return await authService.register({ username, first_name, last_name, email, password, re_password });
-		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString();
-
-			return thunkAPI.rejectWithValue(message);
-		}
-	}
-);
-
-export const login = createAsyncThunk("auth/login", async ({ email, password }, thunkAPI) => {
-	try {
-		return await authService.login({ email, password });
-	} catch (error) {
-		const message =
-			(error.response &&
-				error.response.data &&
-				error.response.data.message) ||
-			error.message ||
-			error.toString();
-
-		return thunkAPI.rejectWithValue(message);
-	}
-});
-
-export const logout = createAsyncThunk("auth/logout", async () => {
-	authService.logout();
-});
+// export const logout = createAsyncThunk("auth/logout", async () => {
+// 	authService.logout();
+// });
 
 export const activate = createAsyncThunk(
 	"auth/activate",
@@ -117,6 +84,13 @@ export const authSlice = createSlice({
 			state.isPassResetSend = false;
 			state.message = "";
 		},
+		logout: (state) => {
+      localStorage.removeItem('access');
+      localStorage.removeItem('refresh');
+      localStorage.removeItem('user');
+			state.user = null;
+			state.isLoggedIn = false;
+    },
 	},
 	extraReducers: (builder) => {
 		builder
@@ -152,12 +126,25 @@ export const authSlice = createSlice({
 				state.message = action.payload;
 				state.user = null;
 			})
-			.addCase(logout.fulfilled, (state) => {
-				state.user = null;
-				state.isLoggedIn = false;
-				state.isSuccess = false;
-				state.isPassResetSend = false;
+			.addCase(getUser.pending, (state) => {
+				state.isLoading = true;
 			})
+			.addCase(getUser.fulfilled, (state, action) => {
+				state.isLoading = false;
+				state.user = action.payload;
+			})
+			.addCase(getUser.rejected, (state, action) => {
+				state.isLoading = false;
+				state.message = action.payload;
+				state.isError = true;
+				state.user = null;
+			})
+			// .addCase(logout.fulfilled, (state) => {
+			// 	state.user = null;
+			// 	state.isLoggedIn = false;
+			// 	state.isSuccess = false;
+			// 	state.isPassResetSend = false;
+			// })
 			.addCase(activate.pending, (state) => {
 				state.isLoading = true;
 			})
@@ -204,6 +191,6 @@ export const authSlice = createSlice({
 	},
 });
 
-export const { reset } = authSlice.actions;
+export const { reset, logout } = authSlice.actions;
 
 export default authSlice.reducer;

@@ -7,7 +7,8 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Oval } from 'react-loader-spinner';
 import Title from "../components/Title";
-import { login, reset } from "../features/auth/authSlice";
+import { reset } from "../features/auth/authSlice";
+import { login } from "../features/auth/authService";
 
 const LoginPage = () => {
 	const dispatch = useDispatch();

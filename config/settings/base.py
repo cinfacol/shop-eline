@@ -134,11 +134,14 @@ CORS_ORIGIN_WHITELIST = [
     "http://localhost:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:1337",
     "http://127.0.0.1:80",
     "http://localhost:1337",
     "http://localhost:80",
+    "http://localhost",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -150,6 +153,8 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:5557",
     "http://127.0.0.1:5557",
+    "http://127.0.0.1",
+    "http://localhost",
 ]
 
 PASSWORD_HASHERS = [

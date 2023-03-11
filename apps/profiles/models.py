@@ -26,7 +26,7 @@ class Profile(TimeStampedUUIDModel):
         verbose_name=_("Phone Number"),
         max_length=30,
         region="CO",
-        default="+575242042421",
+        default="+573242042421",
     )
     about_me = models.TextField(
         verbose_name=_("About me"), default=_("say something about yourself")

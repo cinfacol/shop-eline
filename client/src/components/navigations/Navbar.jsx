@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Popover, Transition, Menu } from '@headlessui/react';
@@ -17,6 +17,7 @@ import {HeartIcon} from '@heroicons/react/24/solid';
 import {ShoppingCartIcon} from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { logout, reset } from '../../features/auth/authSlice';
+// import { getUser } from '../../features/auth/authService';
 
 const solutions = [
   {
@@ -71,13 +72,21 @@ export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user } = useSelector((state) => state.auth);
   const isLogged = useSelector((state) => state.auth.isLoggedIn);
+  const [log, setLog] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user'));
   const logoutHandler = () => {
 		dispatch(logout());
 		dispatch(reset());
 		navigate("/");
 	};
+
+  useEffect(() => {
+    if (isLogged) {
+        setLog(true);
+        window.scrollTo(0, 0);
+    }
+  }, [isLogged])
 
   const authLinks = (
     <Menu as="div" className="relative inline-block text-left">
@@ -86,7 +95,8 @@ export default function Navbar() {
           <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
             <img
               className="h-full w-full rounded-full"
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              // src={user && user ? user.profile_photo : "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+              src={user && user.profile_photo}
               alt=""
             />
           </span>
@@ -144,9 +154,15 @@ export default function Navbar() {
       <div>
         <Menu.Button className="inline-flex justify-center w-full rounded-full  text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500">
           <span className="inline-block h-10 w-10 rounded-full overflow-hidden bg-gray-100">
-            <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+            {/* <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
+            </svg> */}
+            <img
+              className="h-full w-full rounded-full"
+              // src={user && user ? user.profile_photo : "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"}
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKNFcHih9B4u-dmadzY41EHOXwMJ8Dyhn5bw&usqp=CAU"
+              alt=""
+            />
           </span>
         </Menu.Button>
       </div>
@@ -216,9 +232,9 @@ export default function Navbar() {
             <div className='md:hidden ml-14'>
               <div className='flex items-center justify-between space-x-3'>
                 <div>
-                  {user ? user.first_name : 'Invitado'}
+                  {(user || isLogged) ? user && user.first_name : 'Invitado'}
                 </div>
-                {isLogged ? authLinks : guestLinks }
+                {user ? authLinks : guestLinks }
                 <div className='mt-5'>
                   <Link to="/">
                     <ShoppingCartIcon className="h-8 w-8 cursor-pointer text-gray-300 md:mr-6 mr-4" />
@@ -318,8 +334,8 @@ export default function Navbar() {
               <NavLink to='/shop' className="text-base font-medium text-gray-500 hover:text-gray-900">
                 Shop
               </NavLink>
-              <Link to="/" className="text-base font-medium text-gray-500 hover:text-gray-900">
-                Docs
+              <Link to="/properties" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                Properties
               </Link>
               {/* {
                 (location.pathname !== '/search') ?
@@ -422,14 +438,14 @@ export default function Navbar() {
             </Popover.Group>
             <div className="flex items-center md:ml-12">
               <div className='flex items-center md:mr-6 md:justify-between md:space-x-5'>
-                <div>{isLogged ? user.first_name : 'Invitado'}</div>
-                {isLogged ? authLinks : guestLinks }
+                <div>{(user || isLogged) ? user && user.first_name : 'Invitado'}</div>
+                {(user || isLogged) ? authLinks : guestLinks }
               </div>
               <Link to="/cart">
                 <ShoppingCartIcon className="h-8 w-8 cursor-pointer text-gray-300 lg:mr-6 mr-4" />
                 <span className="text-xs absolute top-1 mt-11 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">2</span>
               </Link>
-              {isLogged &&
+              {user &&
               <Link to="/wishlist">
                 <HeartIcon className="h-8 w-8 cursor-pointer text-gray-300 lg:mr-6 mr-4" />
                 <span className="text-xs absolute top-1 mt-11 ml-4 bg-red-500 text-white font-semibold rounded-full px-2 text-center">1</span>

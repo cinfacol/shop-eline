@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from 'react';
 // import get_profile from "../features/profiles/profileSlice";
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
   BellIcon,
@@ -11,6 +11,7 @@ import {
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { countries } from '../helpers/fixedCountries';
 import { Oval } from 'react-loader-spinner';
+import Title from '../components/Title';
 
 const userNavigation = [
   { name: 'Your Profile', href: '#' },
@@ -25,19 +26,18 @@ function classNames(...classes) {
 const ProfilePage = () => {
   // const orders = useSelector(state => state.orders.orders);
   // const isAuthenticated = useSelector(state => state.auth.user.isLoggedIn);
-  const user = useSelector(state => state.auth.user);
-  const profile = useSelector(state => state.profile);
-  // const dispatch = useDispatch();
+  // const user = useSelector(state => state.auth.user);
+  const profile = useSelector(state => state.profile.profile);
+  const dispatch = useDispatch();
+
+
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const loading = useSelector(state => state.profile.status);
+  const loading = useSelector(state => state.profile.isLoading);
 
   useEffect(() => {
-    // dispatch(list_orders());
-    // dispatch(get_items(), get_total(), get_item_total());
     // dispatch(get_profile());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [dispatch])
 
   const [formData, setFormData] = useState({
     country: '',
@@ -71,6 +71,7 @@ const ProfilePage = () => {
 
   return (
     <>
+      <Title title="profile" />
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog as='div' className='fixed inset-0 flex z-40 md:hidden' onClose={setSidebarOpen}>
@@ -253,12 +254,12 @@ const ProfilePage = () => {
                 {/* We've used 3xl here, but feel free to try other max-widths based on your needs */}
                 <form onSubmit={e => onSubmit(e)} className='max-w-3xl mx-auto'>
                   <div className='bg-white px-4 py-5 border-b border-gray-200 sm:px-6'>
-                    <h3 className='text-lg leading-6 font-medium text-gray-900'>Perfil de  {user.first_name} {user.last_name} </h3>
+                    <h3 className='text-lg leading-6 font-medium text-gray-900'>Perfil de  {} {} </h3>
                   </div>
 
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      Countcountry
+                      Country
                     </label>
                     <div className='mt-1 sm:mt-0 sm:col-span-2'>
                       <div className='max-w-lg flex rounded-md shadow-sm'>
@@ -318,7 +319,7 @@ const ProfilePage = () => {
 
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='country' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      Country
+                      Country Region
                     </label>
                     <div className='mt-1 sm:mt-0 sm:col-span-2'>
                       <select

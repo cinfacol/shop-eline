@@ -1,13 +1,23 @@
 import Navbar from "../components/navigations/Navbar";
 import Footer from "../components/navigations/Footer";
+// import {get_profile} from "../features/profiles/profileService";
+// import { useDispatch } from "react-redux";
+// import { useEffect } from "react";
 
-const Layout = (props) => {
+const Layout = ({children}) => {
+  // const dispatch = useDispatch()
+
+  /* useEffect(() => {
+    dispatch(get_profile());
+  }, [dispatch]); */
   return (
-    <div>
+    <>
       <Navbar />
-      {props.children}
+      <div>
+        {children}
+      </div>
       <Footer />
-    </div>
+    </>
   )
 }
 
