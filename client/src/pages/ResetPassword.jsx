@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { reset_password } from '../features/auth/authSlice';
+import { reset_password } from '../features/auth/authService';
 import { Oval } from 'react-loader-spinner';
 import { useEffect } from 'react';
 import { reset } from '../features/auth/authSlice';

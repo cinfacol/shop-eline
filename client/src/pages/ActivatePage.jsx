@@ -6,7 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import Title from "../components/Title";
-import { activate, reset } from "../features/auth/authSlice";
+import { activate } from "../features/auth/authService";
+import { reset } from "../features/auth/authSlice";
 
 const ActivatePage = () => {
 	const { uid, token } = useParams();

@@ -1,5 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import authService, { register, login, getUser } from "./authService"
+import { createSlice } from "@reduxjs/toolkit";
+import {
+	register,
+	login, getUser,
+	activate,
+	reset_password,
+	reset_password_confirm
+} from "./authService"
 
 const user = JSON.parse(localStorage.getItem("user"));
 
@@ -13,64 +19,6 @@ const initialState = {
 	isPassResetSend: false,
 	message: "",
 };
-
-// export const logout = createAsyncThunk("auth/logout", async () => {
-// 	authService.logout();
-// });
-
-export const activate = createAsyncThunk(
-	"auth/activate",
-	async (user, thunkAPI) => {
-		try {
-			return await authService.activate(user);
-		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString();
-
-			return thunkAPI.rejectWithValue(message);
-		}
-	}
-);
-
-export const reset_password = createAsyncThunk(
-	"auth/reset_password",
-	async(email, thunkAPI) => {
-		try {
-			return await authService.reset_password(email);
-		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString();
-
-			return thunkAPI.rejectWithValue(message);
-		}
-	}
-)
-
-export const reset_password_confirm = createAsyncThunk(
-	"auth/reset_password_confirm",
-	async({ uid, token, new_password, re_new_password }, thunkAPI) => {
-		try {
-			return await authService.reset_password_confirm({ uid, token, new_password, re_new_password });
-		} catch (error) {
-			const message =
-				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString();
-
-			return thunkAPI.rejectWithValue(message);
-		}
-	}
-)
 
 export const authSlice = createSlice({
 	name: "auth",
@@ -139,12 +87,6 @@ export const authSlice = createSlice({
 				state.isError = true;
 				state.user = null;
 			})
-			// .addCase(logout.fulfilled, (state) => {
-			// 	state.user = null;
-			// 	state.isLoggedIn = false;
-			// 	state.isSuccess = false;
-			// 	state.isPassResetSend = false;
-			// })
 			.addCase(activate.pending, (state) => {
 				state.isLoading = true;
 			})
