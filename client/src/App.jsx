@@ -11,7 +11,8 @@ import ResetPassword from "./pages/ResetPassword";
 import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
 import PropertiesPage from "./pages/PropertiesPage";
 import RegisterPage from "./pages/RegisterPage";
-import ProfilePage from "./pages/ProfilePage"
+import ProfilePage from "./pages/ProfilePage";
+import EditProfile from "./pages/EditProfile";
 
 function App () {
 	return (
@@ -32,6 +33,7 @@ function App () {
 					/>
 					<Route path="/properties" element={<PropertiesPage />} />
 					<Route path="/profile" element={<ProfilePage />} />
+					<Route path="/edit_profile" element={<EditProfile />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 				<ToastContainer theme="dark" />

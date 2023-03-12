@@ -1,10 +1,18 @@
 import Layout from "../hocs/Layout";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Title from "../components/Title";
+import { getProfile } from "../features/profiles/profileService";
+import { useEffect } from "react";
 
-export default function Profile() {
+const Profile = () => {
+  const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
+  const profile = useSelector(state => state.profile.profile)
+
+  useEffect(() => {
+    dispatch(getProfile());
+  }, [dispatch]);
 
   return (
     <Layout>
@@ -65,7 +73,9 @@ export default function Profile() {
                         type="button"
                         style={{ transition: "all .15s ease" }}
                       >
-                        Edit Profile
+                        <Link to="/edit_profile">
+                          Edit Profile
+                        </Link>
                       </button>
                     </div>
                   </div>
@@ -94,11 +104,11 @@ export default function Profile() {
                 </div>
                 <div className="text-center mt-12">
                   <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800">
-                    {user && user.first_name} {user && user.last_name}
+                    {profile && profile.full_name}
                   </h3>
                   <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
-                    {user && user.city}, {user && user.country}
+                    {profile && profile.city}, {profile && profile.country}
                   </div>
                   <div className="mb-2 text-gray-700 mt-10">
                     <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
@@ -133,3 +143,5 @@ export default function Profile() {
     </Layout>
   );
 }
+
+export default Profile;

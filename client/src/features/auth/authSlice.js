@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
 	register,
-	login, getUser,
+	login,
+	getUser,
 	activate,
 	reset_password,
 	reset_password_confirm
@@ -36,6 +37,7 @@ export const authSlice = createSlice({
       localStorage.removeItem('access');
       localStorage.removeItem('refresh');
       localStorage.removeItem('user');
+      localStorage.removeItem('profile');
 			state.user = null;
 			state.isLoggedIn = false;
     },

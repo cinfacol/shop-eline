@@ -12,9 +12,11 @@ import {PlayIcon} from '@heroicons/react/24/outline';
 import {ShieldCheckIcon} from '@heroicons/react/24/outline';
 import {ViewColumnsIcon} from '@heroicons/react/24/outline';
 import {XMarkIcon} from '@heroicons/react/24/outline';
-import {ChevronDownIcon} from '@heroicons/react/24/solid';
-import {HeartIcon} from '@heroicons/react/24/solid';
 import {ShoppingCartIcon} from '@heroicons/react/24/outline';
+import {
+  ChevronDownIcon,
+  HeartIcon
+} from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 import { logout, reset } from '../../features/auth/authSlice';
 // import { getUser } from '../../features/auth/authService';

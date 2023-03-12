@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const PROFILE_API_URL = "api/profile/user"
-// const UPDATE_PROFILE_API_URL = "api/profile/update"
+const PROFILE_API_URL = "api/profile/me"
+const UPDATE_PROFILE_API_URL = "api/profile/update"
 
 export const getProfile = createAsyncThunk(
   "profile/get_profile",
@@ -18,6 +18,7 @@ export const getProfile = createAsyncThunk(
       try {
         const response = await axios.get(PROFILE_API_URL, config);
         if (response.status === 200) {
+          localStorage.setItem('profile', JSON.stringify(response.data));
           return response.data;
         } else {
           return thunkAPI.dispatch(Error);
@@ -36,26 +37,9 @@ export const getProfile = createAsyncThunk(
   }
 )
 
-/* export const get_profile =
-  async ({ email, password }) => {
-    const config = {
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': `JWT ${localStorage.getItem('access')}`,
-      }
-    };
-
-    const response = await axios.get(PROFILE_API_URL, email, password, config);
-
-    return response.data;
-  } */
-
-// const profileService = { getProfile };
-// export default profileService;
-
-/* export const update_profile = createAsyncThunk(
+export const update_profile = createAsyncThunk(
   'profile/update_profile',
-  async ({ address_line_1, address_line_2, city, state_province_region, zipcode, phone, country_region }, thunkAPI) => {
+  async ({ address_line_1, address_line_2, city, country, zipcode, phone_number }, thunkAPI) => {
     if (localStorage.getItem('access')) {
       const config = {
         headers: {
@@ -69,10 +53,9 @@ export const getProfile = createAsyncThunk(
         address_line_1,
         address_line_2,
         city,
-        state_province_region,
+        country,
         zipcode,
-        phone,
-        country_region
+        phone_number
       });
 
       try {
@@ -92,4 +75,4 @@ export const getProfile = createAsyncThunk(
       }
     }
   }
-); */
+);
