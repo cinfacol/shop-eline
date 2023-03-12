@@ -12,33 +12,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source="user.last_name")
     email = serializers.EmailField(source="user.email")
     full_name = serializers.SerializerMethodField(read_only=True)
-    country = CountryField(name_only=True)
+    # country = CountryField(name_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = [
-            "username",
-            "first_name",
-            "last_name",
-            "full_name",
-            "email",
-            "id",
-            "phone_number",
-            "about_me",
-            "license",
-            "profile_photo",
-            "gender",
-            "verified",
-            "country",
-            "city",
-            "is_buyer",
-            "is_seller",
-            "is_agent",
-            "rating",
-            "num_reviews",
-            "reviews",
-        ]
+        fields = "__all__"
 
     def get_full_name(self, obj):
         first_name = obj.user.first_name.title()
@@ -62,18 +41,7 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = [
-            "phone_number",
-            "profile_photo",
-            "about_me",
-            "license",
-            "gender",
-            "country",
-            "city",
-            "is_buyer",
-            "is_seller",
-            "is_agent",
-        ]
+        fields = "__all__"
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

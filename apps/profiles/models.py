@@ -5,6 +5,7 @@ from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedUUIDModel
+from apps.orders.countries import Countries
 
 User = get_user_model()
 
@@ -31,6 +32,8 @@ class Profile(TimeStampedUUIDModel):
     about_me = models.TextField(
         verbose_name=_("About me"), default=_("say something about yourself")
     )
+    address_line_1 = models.CharField(max_length=255, default="")
+    address_line_2 = models.CharField(max_length=255, default="", blank=True, null=True)
     license = models.CharField(
         verbose_name=_("Shop Eline license"), max_length=20, blank=True, null=True
     )
@@ -49,8 +52,11 @@ class Profile(TimeStampedUUIDModel):
         default=VerificationType.UNVERIFIED,
         max_length=20,
     )
-    country = CountryField(
-        verbose_name=_("Country"), default="CO", blank=False, null=False
+    country = models.CharField(
+        max_length=255,
+        verbose_name=_("Country"),
+        choices=Countries.choices,
+        default=Countries.Colombia,
     )
     city = models.CharField(
         verbose_name=_("City"),
@@ -59,6 +65,7 @@ class Profile(TimeStampedUUIDModel):
         blank=False,
         null=False,
     )
+    zipcode = models.CharField(max_length=20, default="")
     is_buyer = models.BooleanField(
         verbose_name=_("Buyer"),
         default=False,

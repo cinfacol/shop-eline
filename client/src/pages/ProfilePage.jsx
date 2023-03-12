@@ -1,364 +1,135 @@
-import { Fragment, useEffect, useState } from 'react';
-// import get_profile from "../features/profiles/profileSlice";
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Dialog, Menu, Transition } from '@headlessui/react';
-import {
-  BellIcon,
-  Bars2Icon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
-import { countries } from '../helpers/fixedCountries';
-import { Oval } from 'react-loader-spinner';
-import Title from '../components/Title';
+import Layout from "../hocs/Layout";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import Title from "../components/Title";
 
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
-]
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
-const ProfilePage = () => {
-  // const orders = useSelector(state => state.orders.orders);
-  // const isAuthenticated = useSelector(state => state.auth.user.isLoggedIn);
-  // const user = useSelector(state => state.auth.user);
-  const profile = useSelector(state => state.profile.profile);
-  const dispatch = useDispatch();
-
-
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const loading = useSelector(state => state.profile.isLoading);
-
-  useEffect(() => {
-    // dispatch(get_profile());
-  }, [dispatch])
-
-  const [formData, setFormData] = useState({
-    country: '',
-    city: '',
-    phone_number: '',
-    country_region: 'Colombia'
-  });
-
-  const {
-    country,
-    city,
-    phone_number,
-    country_region
-  } = formData;
-
-  const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const onSubmit = e => {
-    e.preventDefault();
-    // dispatch(update_user_profile({
-    //   country,
-    //   city,
-    //   phone_number,
-    //   country_region
-    // }));
-    window.scrollTo(0, 0);
-  };
-
-  // if (!isAuthenticated)
-  //   return <Navigate to='/' />
+export default function Profile() {
+  const user = useSelector(state => state.auth.user);
 
   return (
-    <>
-      <Title title="profile" />
-      <div>
-        <Transition.Root show={sidebarOpen} as={Fragment}>
-          <Dialog as='div' className='fixed inset-0 flex z-40 md:hidden' onClose={setSidebarOpen}>
-            <Transition.Child
-              as={Fragment}
-              enter='transition-opacity ease-linear duration-300'
-              enterFrom='opacity-0'
-              enterTo='opacity-100'
-              leave='transition-opacity ease-linear duration-300'
-              leaveFrom='opacity-100'
-              leaveTo='opacity-0'
-            >
-              <Dialog.Overlay className='fixed inset-0 bg-gray-600 bg-opacity-75' />
-            </Transition.Child>
-            <Transition.Child
-              as={Fragment}
-              enter='transition ease-in-out duration-300 transform'
-              enterFrom='-translate-x-full'
-              enterTo='translate-x-0'
-              leave='transition ease-in-out duration-300 transform'
-              leaveFrom='translate-x-0'
-              leaveTo='-translate-x-full'
-            >
-              <div className='relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white'>
-                <Transition.Child
-                  as={Fragment}
-                  enter='ease-in-out duration-300'
-                  enterFrom='opacity-0'
-                  enterTo='opacity-100'
-                  leave='ease-in-out duration-300'
-                  leaveFrom='opacity-100'
-                  leaveTo='opacity-0'
-                >
-                  <div className='absolute top-0 right-0 -mr-12 pt-2'>
-                    <button
-                      type='button'
-                      className='ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
-                      onClick={() => setSidebarOpen(false)}
-                    >
-                      <span className='sr-only'>Close sidebar</span>
-                      <XCircleIcon className='h-6 w-6 text-white' aria-hidden='true' />
-                    </button>
-                  </div>
-                </Transition.Child>
-                <div className='flex-shrink-0 flex items-center px-4'>
-                  <Link to='/'>
-                    <img
-                      className='h-8 w-auto cursor-pointer'
-                      src='https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg'
-                      alt='Workflow'
-                    />
-                  </Link>
-                </div>
-                <div className='mt-5 flex-1 h-0 overflow-y-auto'>
-                  <nav className='px-2 space-y-1'>
-                    {/* <DashboardLink /> */}
-                  </nav>
-                </div>
-              </div>
-            </Transition.Child>
-            <div className='flex-shrink-0 w-14' aria-hidden='true'>
-              {/* Dummy element to force sidebar to shrink to fit close icon */}
-            </div>
-          </Dialog>
-        </Transition.Root>
-
-        {/* Static sidebar for desktop */}
-        <div className='hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0'>
-          {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className='flex flex-col flex-grow border-r border-gray-200 pt-5 bg-white overflow-y-auto'>
-            <div className='flex items-center flex-shrink-0 px-4'>
-
-              <Link
-                to='/'
-                className='inline-flex items-center px-2.5 py-1.5 border border-gray-500 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-              >
-                Regresar
-              </Link>
-
-              <img
-                className='h-8 w-auto'
-                src='https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg'
-                alt='Workflow'
-              />
-
-            </div>
-            <div className='mt-5 flex-grow flex flex-col'>
-              <nav className='flex-1 px-2 pb-4 space-y-1'>
-                {/* <DashboardLink /> */}
-              </nav>
-            </div>
+    <Layout>
+      <Title title={`Perfil de ${user.username}`} />
+      <main className="flex-1">
+        <section className="relative block" style={{ height: "500px" }}>
+          <div
+            className="absolute top-0 w-full h-full bg-center bg-cover"
+            style={{
+              backgroundImage:
+                "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80')"
+            }}
+          >
+            <span
+              id="blackOverlay"
+              className="w-full h-full absolute opacity-50 bg-black"
+            ></span>
           </div>
-        </div>
-        <div className='md:pl-64 flex flex-col flex-1'>
-          <div className='sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow'>
-            <button
-              type='button'
-              className='px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden'
-              onClick={() => setSidebarOpen(true)}
+          <div
+            className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
+            style={{ height: "70px" }}
+          >
+            <svg
+              className="absolute bottom-0 overflow-hidden"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="none"
+              version="1.1"
+              viewBox="0 0 2560 100"
+              x="0"
+              y="0"
             >
-              <span className='sr-only'>Open sidebar</span>
-              <Bars2Icon className='h-6 w-6' aria-hidden='true' />
-            </button>
-            <div className='flex-1 px-4 flex justify-between'>
-              <div className='flex-1 flex'>
-                <form className='w-full flex md:ml-0' action='#' method='GET'>
-                  <label htmlFor='search-field' className='sr-only'>
-                    Search
-                  </label>
-                  <div className='relative w-full text-gray-400 focus-within:text-gray-600'>
-                    <div className='absolute inset-y-0 left-0 flex items-center pointer-events-none'>
-                      <MagnifyingGlassIcon className='h-5 w-5' aria-hidden='true' />
-                    </div>
-                    <input
-                      id='search-field'
-                      className='block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm'
-                      placeholder='Search'
-                      type='search'
-                      name='search'
-                    />
-                  </div>
-                </form>
-              </div>
-              <div className='ml-4 flex items-center md:ml-6'>
-                <button
-                  type='button'
-                  className='bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                >
-                  <span className='sr-only'>View notifications</span>
-                  <BellIcon className='h-6 w-6' aria-hidden='true' />
-                </button>
-
-                {/* Profile dropdown */}
-                <Menu as='div' className='ml-3 relative'>
-                  <div>
-                    <Menu.Button className='max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-                      <span className='sr-only'>Open user menu</span>
+              <polygon
+                className="text-gray-300 fill-current"
+                points="2560 0 2560 100 0 100"
+              ></polygon>
+            </svg>
+          </div>
+        </section>
+        <section className="relative py-16 bg-gray-300">
+          <div className="container mx-auto px-4">
+            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
+              <div className="px-6">
+                <div className="flex flex-wrap justify-center">
+                  <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
+                    <div className="relative">
                       <img
-                        className='h-8 w-8 rounded-full'
-                        src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-                        alt=''
+                        alt="..."
+                        src={user && user.profile_photo}
+                        className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16"
+                        style={{ maxWidth: "150px" }}
                       />
-                    </Menu.Button>
+                    </div>
                   </div>
-                  <Transition
-                    as={Fragment}
-                    enter='transition ease-out duration-100'
-                    enterFrom='transform opacity-0 scale-95'
-                    enterTo='transform opacity-100 scale-100'
-                    leave='transition ease-in duration-75'
-                    leaveFrom='transform opacity-100 scale-100'
-                    leaveTo='transform opacity-0 scale-95'
-                  >
-                    <Menu.Items className='origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none'>
-                      {userNavigation.map((item) => (
-                        <Menu.Item key={item.name}>
-                          {({ active }) => (
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm text-gray-700'
-                              )}
-                            >
-                              {item.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
+                  <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
+                    <div className="py-6 px-3 mt-32 sm:mt-0">
+                      <button
+                        className="bg-pink-500 active:bg-pink-600 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1"
+                        type="button"
+                        style={{ transition: "all .15s ease" }}
+                      >
+                        Edit Profile
+                      </button>
+                    </div>
+                  </div>
+                  <div className="w-full lg:w-4/12 px-4 lg:order-1">
+                    <div className="flex justify-center py-4 lg:pt-4 pt-8">
+                      <div className="mr-4 p-3 text-center">
+                        <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
+                          22
+                        </span>
+                        <span className="text-sm text-gray-500">Friends</span>
+                      </div>
+                      <div className="mr-4 p-3 text-center">
+                        <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
+                          10
+                        </span>
+                        <span className="text-sm text-gray-500">Photos</span>
+                      </div>
+                      <div className="lg:mr-4 p-3 text-center">
+                        <span className="text-xl font-bold block uppercase tracking-wide text-gray-700">
+                          89
+                        </span>
+                        <span className="text-sm text-gray-500">Comments</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-center mt-12">
+                  <h3 className="text-4xl font-semibold leading-normal mb-2 text-gray-800">
+                    {user && user.first_name} {user && user.last_name}
+                  </h3>
+                  <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold uppercase">
+                    <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
+                    {user && user.city}, {user && user.country}
+                  </div>
+                  <div className="mb-2 text-gray-700 mt-10">
+                    <i className="fas fa-briefcase mr-2 text-lg text-gray-500"></i>
+                    Solution Manager - Creative Tim Officer
+                  </div>
+                  <div className="mb-2 text-gray-700">
+                    <i className="fas fa-university mr-2 text-lg text-gray-500"></i>
+                    University of Computer Science
+                  </div>
+                </div>
+                <div className="mt-10 py-10 border-t border-gray-300 text-center">
+                  <div className="flex flex-wrap justify-center">
+                    <div className="w-full lg:w-9/12 px-4">
+                      <p className="mb-4 text-lg leading-relaxed text-gray-800">
+                        An artist of considerable range, Jenna the name taken by
+                        Melbourne-raised, Brooklyn-based Nick Murphy writes,
+                        performs and records all of his own music, giving it a
+                        warm, intimate feel with a solid groove structure. An
+                        artist of considerable range.
+                      </p>
+                      <Link to="#" >
+                        Show more
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
-          <main className='flex-1'>
-            <div className='py-6'>
-              <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-                {/* We've used 3xl here, but feel free to try other max-widths based on your needs */}
-                <form onSubmit={e => onSubmit(e)} className='max-w-3xl mx-auto'>
-                  <div className='bg-white px-4 py-5 border-b border-gray-200 sm:px-6'>
-                    <h3 className='text-lg leading-6 font-medium text-gray-900'>Perfil de  {} {} </h3>
-                  </div>
-
-                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
-                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      Country
-                    </label>
-                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
-                      <div className='max-w-lg flex rounded-md shadow-sm'>
-
-                        <input
-                          type='text'
-                          name='country'
-                          placeholder={`${profile && profile.country}`}
-                          onChange={e => onChange(e)}
-                          value={country}
-                          required
-                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500'
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
-                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      State/Province:
-                    </label>
-                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
-                      <div className='max-w-lg flex rounded-md shadow-sm'>
-
-                        <input
-                          type='text'
-                          name='city'
-                          placeholder={`${profile && profile.city}`}
-                          onChange={e => onChange(e)}
-                          value={city}
-                          required
-                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500'
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
-                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      Phone Number:
-                    </label>
-                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
-                      <div className='max-w-lg flex rounded-md shadow-sm'>
-
-                        <input
-                          type='text'
-                          name='phone_number'
-                          placeholder={`${profile && profile.phone_number}`}
-                          onChange={e => onChange(e)}
-                          value={phone_number}
-                          required
-                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500'
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
-                    <label htmlFor='country' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      Country Region
-                    </label>
-                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
-                      <select
-                        id='country_region'
-                        name='country_region'
-                        onChange={e => onChange(e)}
-                      >
-                        <option value={country_region}>{profile && profile.country_region}</option>
-                        {
-                          countries && countries.map((country, index) => (
-                            <option key={index} value={country.name}>{country.name}</option>
-                          ))
-                        }
-                      </select>
-                    </div>
-                  </div>
-
-                  {(loading === 'pending') ? <button
-                    className='inline-flex mt-4 float-right items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                  >
-                    <Oval
-                      width={20}
-                      height={20}
-                      color='#fff'
-                    />
-                  </button> : <button
-                    type='submit'
-                    className='inline-flex mt-4 float-right items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-                  >
-                    Save
-                  </button>}
-                </form>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-    </>
-  )
+        </section>
+      </main>
+    </Layout>
+  );
 }
-
-export default ProfilePage

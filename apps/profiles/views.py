@@ -38,10 +38,17 @@ class GetProfileAPIView(APIView):
     renderer_classes = [ProfileJSONRenderer]
 
     def get(self, request):
-        user = self.request.user
-        user_profile = Profile.objects.get(user=user)
-        serializer = ProfileSerializer(user_profile, context={"request": request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        try:
+            user = self.request.user
+            user_profile = Profile.objects.get(user=user)
+            serializer = ProfileSerializer(user_profile, context={"request": request})
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(
+                {"error": "Something went wrong when retrieving profile"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 class UpdateProfileAPIView(APIView):

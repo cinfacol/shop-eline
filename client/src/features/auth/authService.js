@@ -59,7 +59,6 @@ export const getUser = createAsyncThunk(
 
 			try {
 				const response = await axios.get(GET_USER_URL, config );
-
 				if (response.status === 200) {
 					localStorage.setItem('user', JSON.stringify(response.data));
 					return response.data;
