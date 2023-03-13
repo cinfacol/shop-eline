@@ -12,12 +12,35 @@ class ProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source="user.last_name")
     email = serializers.EmailField(source="user.email")
     full_name = serializers.SerializerMethodField(read_only=True)
-    # country = CountryField(name_only=True)
+    country = CountryField(name_only=True)
     reviews = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = "__all__"
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "full_name",
+            "email",
+            "id",
+            "phone_number",
+            "profile_photo",
+            "about_me",
+            "address_line_1",
+            "address_line_2",
+            "license",
+            "gender",
+            "country",
+            "city",
+            "zipcode",
+            "is_buyer",
+            "is_seller",
+            "is_agent",
+            "rating",
+            "num_reviews",
+            "reviews",
+        ]
 
     def get_full_name(self, obj):
         first_name = obj.user.first_name.title()

@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const PROFILE_API_URL = "api/profile/me"
+const PROFILE_API_URL = "api/profile/me/"
 const UPDATE_PROFILE_API_URL = "api/profile/update"
 
 export const getProfile = createAsyncThunk(
@@ -39,7 +39,7 @@ export const getProfile = createAsyncThunk(
 
 export const update_profile = createAsyncThunk(
   'profile/update_profile',
-  async ({ address_line_1, address_line_2, city, country, zipcode, phone_number }, thunkAPI) => {
+  async ({ phone_number, about_me, address_line_1, address_line_2, profile_photo, gender, country, city, zipcode }, thunkAPI) => {
     if (localStorage.getItem('access')) {
       const config = {
         headers: {
@@ -50,28 +50,34 @@ export const update_profile = createAsyncThunk(
       };
 
       const body = JSON.stringify({
+        phone_number,
+        about_me,
         address_line_1,
         address_line_2,
-        city,
+        profile_photo,
+        gender,
         country,
+        city,
         zipcode,
-        phone_number
       });
 
       try {
-        const res = await axios.put(UPDATE_PROFILE_API_URL, body, config);
-        if (res.status === 200 && !res.data.error) {
-          return res.data;
+        console.log('body', body);
+        const response = await axios.patch(UPDATE_PROFILE_API_URL, body, config);
+        if (response.status === 200 && !response.data.error) {
+          return response.data;
         } else {
           return thunkAPI.dispatch(Error);
         }
       } catch (error) {
-        if (error.response.data) {
-          console.log('catch error', error.response.data);
-          return thunkAPI.rejectWithValue(error.response.data);
-        } else {
-          return thunkAPI.rejectWithValue(error.message);
-        }
+        const message =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        return thunkAPI.rejectWithValue(message);
       }
     }
   }

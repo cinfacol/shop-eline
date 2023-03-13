@@ -4,11 +4,21 @@ import { Link } from "react-router-dom";
 import Title from "../components/Title";
 import { getProfile } from "../features/profiles/profileService";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
+import { reset } from "../features/profiles/profileSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
-  const profile = useSelector(state => state.profile.profile)
+  const { profile, isError, message } = useSelector(state => state.profile)
+
+  useEffect(() => {
+		if (isError) {
+			toast.error(message);
+		}
+
+		dispatch(reset());
+	}, [isError, message, dispatch]);
 
   useEffect(() => {
     dispatch(getProfile());

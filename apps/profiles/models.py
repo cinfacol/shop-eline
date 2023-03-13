@@ -5,7 +5,8 @@ from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedUUIDModel
-from apps.orders.countries import Countries
+
+# from apps.orders.countries import Countries
 
 User = get_user_model()
 
@@ -52,11 +53,8 @@ class Profile(TimeStampedUUIDModel):
         default=VerificationType.UNVERIFIED,
         max_length=20,
     )
-    country = models.CharField(
-        max_length=255,
-        verbose_name=_("Country"),
-        choices=Countries.choices,
-        default=Countries.Colombia,
+    country = CountryField(
+        verbose_name=_("Country"), default="CO", blank=False, null=False
     )
     city = models.CharField(
         verbose_name=_("City"),

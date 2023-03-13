@@ -103,15 +103,15 @@ export const login = createAsyncThunk(
 				dispatch(getUser());
 				return response.data;
 			} else {
+				console.log('axios_error', response);
 				return thunkAPI.rejectWithValue(Error);
 			}
 		} catch (error) {
 			const message =
 				(error.response &&
-					error.response.data &&
-					error.response.data.message) ||
-				error.message ||
-				error.toString();
+					error.response.data.detail) ||
+					error.message ||
+					error.toString();
 
 			return thunkAPI.rejectWithValue(message);
 		}

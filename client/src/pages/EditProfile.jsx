@@ -1,9 +1,11 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import 'react-phone-number-input/style.css'
+// import PhoneInput from 'react-phone-number-input'
 // import { list_orders } from '../../features/services/orders/orders.service'
-// import { update_user_profile } from '../../features/services/profile/profile.service';
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router';
+import { update_profile } from '../features/profiles/profileService';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router';
 // import DashboardLink from '../../components/dashboard/DashboardLink';
 import { Dialog, Menu, Transition } from '@headlessui/react';
 import {
@@ -14,6 +16,8 @@ import {
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { countries } from '../helpers/fixedCountries';
 import { Oval } from 'react-loader-spinner';
+import { toast } from 'react-toastify';
+import { reset } from '../features/profiles/profileSlice';
 
 const userNavigation = [
   { name: 'Your Profile', href: '/profile' },
@@ -30,48 +34,85 @@ const EditProfile = () => {
   // const isAuthenticated = useSelector(state => state.auth.user.isLoggedIn);
   const user = useSelector(state => state.auth.user);
   const profile = useSelector(state => state.profile.profile);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isError, isSuccess, message } = useSelector(
+		(state) => state.profile
+	);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const loading = useSelector(state => state.profile.status);
 
+  const gender_option = [
+    {value: "MALE", name: "Male"},
+    {value: "FEMALE", name: "Female"},
+    {value: "OTHER", name: "Other"},
+  ]
+
+  // const uploadedImage = React.useRef(null);
+  // const imageUploader = React.useRef(null);
+
   useEffect(() => {
+    if (isError) {
+			toast.error(message);
+		}
+
+		if (isSuccess) {
+			navigate("/profile");
+		}
+
+		dispatch(reset());
     // dispatch(list_orders());
     // dispatch(get_items(), get_total(), get_item_total());
     // dispatch(get_user_profile());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isError, isSuccess, message, navigate, dispatch]);
 
   const [formData, setFormData] = useState({
+    phone_number: '',
+    about_me: '',
     address_line_1: '',
     address_line_2: '',
-    city: '',
+    profile_photo: '',
+    gender: '',
     country: '',
+    city: '',
     zipcode: '',
-    phone_number: '',
   });
 
   const {
+    phone_number,
+    about_me,
     address_line_1,
     address_line_2,
-    city,
+    profile_photo,
+    gender,
     country,
+    city,
     zipcode,
-    phone_number
   } = formData;
 
   const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+  /* const handleImageUpload = e => {
+    const [file] = e.target.files;
+    if (file) {
+      console.log('upload_image_file', file);
+    }
+  }; */
+
   const onSubmit = e => {
     e.preventDefault();
-    /* dispatch(update_user_profile({
+    dispatch(update_profile({
+      phone_number,
+      about_me,
       address_line_1,
       address_line_2,
-      city,
+      profile_photo,
+      gender,
       country,
+      city,
       zipcode,
-      phone_number,
-    })); */
+    }));
     window.scrollTo(0, 0);
   };
 
@@ -274,6 +315,44 @@ const EditProfile = () => {
 
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
+                      Phone:
+                    </label>
+                    <div className='mt-1 sm:mt-0 sm:col-span-2 flex'>
+                      <div className='max-w-lg flex rounded-md shadow-sm'>
+                        <input
+                          type='text'
+                          name='phone_number'
+                          placeholder={`${profile && profile.phone_number}`}
+                          onChange={e => onChange(e)}
+                          value={phone_number}
+                          required
+                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
+                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
+                      about_me:
+                    </label>
+                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
+                      <div className='max-w-lg flex rounded-md shadow-sm'>
+                        <input
+                          type='textarea'
+                          name='about_me'
+                          placeholder={`${profile && profile.about_me}`}
+                          onChange={e => onChange(e)}
+                          value={about_me}
+                          required
+                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
+                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
                       Address Line 1:
                     </label>
                     <div className='mt-1 sm:mt-0 sm:col-span-2'>
@@ -313,6 +392,64 @@ const EditProfile = () => {
 
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
+                      profile_photo:
+                    </label>
+                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
+                      <div className='max-w-lg flex rounded-md shadow-sm'>
+                        <input
+                          type='file'
+                          accept='image/*'
+                          name='profile_photo'
+                          onChange={e => onChange(e)}
+                          value={profile_photo}
+                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
+                    <label htmlFor='gender' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
+                      Gender
+                    </label>
+                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
+                      <select
+                        id='gender'
+                        name='gender'
+                        onChange={e => onChange(e)}
+                      >
+                        <option value={gender}>{profile && profile.gender}</option>
+                        {
+                          gender_option && gender_option.map((gender, index) => (
+                            <option key={index} value={gender.value}>{gender.name}</option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
+                    <label htmlFor='country' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
+                      Country
+                    </label>
+                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
+                      <select
+                        id='country'
+                        name='country'
+                        onChange={e => onChange(e)}
+                      >
+                        <option value={country}>{profile && profile.country}</option>
+                        {
+                          countries && countries.map((country, index) => (
+                            <option key={index} value={country.name}>{country.name}</option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
+                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
                       City
                     </label>
                     <div className='mt-1 sm:mt-0 sm:col-span-2'>
@@ -332,26 +469,6 @@ const EditProfile = () => {
                   </div>
 
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
-                    <label htmlFor='country' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      Country
-                    </label>
-                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
-                      <select
-                        id='country_region'
-                        name='country_region'
-                        onChange={e => onChange(e)}
-                      >
-                        <option value={country}>{profile && profile.country}</option>
-                        {
-                          countries && countries.map((country, index) => (
-                            <option key={index} value={country.name}>{country.name}</option>
-                          ))
-                        }
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
                       Postal Code/Zipcode:
                     </label>
@@ -364,26 +481,6 @@ const EditProfile = () => {
                           placeholder={`${profile && profile.zipcode}`}
                           onChange={e => onChange(e)}
                           value={zipcode}
-                          required
-                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
-                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      Phone:
-                    </label>
-                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
-                      <div className='max-w-lg flex rounded-md shadow-sm'>
-
-                        <input
-                          type='text'
-                          name='phone'
-                          placeholder={`${profile && profile.phone_number}`}
-                          onChange={e => onChange(e)}
-                          value={phone_number}
                           required
                           className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
                         />

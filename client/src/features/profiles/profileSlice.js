@@ -1,15 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getProfile }  from './profileService';
+import { getProfile, update_profile }  from './profileService';
 
 const initialState = {
   profile: null,
-  status: 'idle'
+  isError: false,
+  isSuccess: false,
+  status: 'idle',
+  message: "",
 }
 
 const profileSlice = createSlice({
   name: 'profile',
   initialState,
-  reducers: {},
+  reducers: {
+    reset: (state) => {
+			state.isError = false;
+			state.isSuccess = false;
+      state.status = 'idle';
+			state.message = "";
+		},
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getProfile.pending, (state) => {
@@ -21,20 +31,27 @@ const profileSlice = createSlice({
       })
       .addCase(getProfile.rejected, (state, action) => {
         state.status = 'idle';
-        state.error = action.payload.error;
+        state.isError = true;
+        state.message = action.payload.error;
       })
-      /* .addCase(update_profile.pending, (state) => {
+      .addCase(update_profile.pending, (state) => {
         state.status = 'pending';
+        state.isSuccess = false;
+        state.isError = false;
       })
       .addCase(update_profile.fulfilled, (state, action) => {
         state.status = 'idle';
+        state.isSuccess = true;
         state.profile = action.payload;
       })
       .addCase(update_profile.rejected, (state, action) => {
         state.status = 'idle';
-        state.error = action.payload.error;
-      }) */
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
   }
 })
 
+export const { reset } = profileSlice.actions;
 export default profileSlice.reducer;
