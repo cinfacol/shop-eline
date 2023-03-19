@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import 'react-phone-number-input/style.css'
+// import 'react-phone-number-input/style.css'
 // import PhoneInput from 'react-phone-number-input'
 // import { list_orders } from '../../features/services/orders/orders.service'
 import { update_profile } from '../features/profiles/profileService';
@@ -34,6 +34,7 @@ const EditProfile = () => {
   // const isAuthenticated = useSelector(state => state.auth.user.isLoggedIn);
   const user = useSelector(state => state.auth.user);
   const profile = useSelector(state => state.profile.profile);
+  const username = user.username;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isError, isSuccess, message } = useSelector(
@@ -75,6 +76,7 @@ const EditProfile = () => {
     profile_photo: '',
     gender: '',
     country: '',
+    departamento: '',
     city: '',
     zipcode: '',
   });
@@ -87,6 +89,7 @@ const EditProfile = () => {
     profile_photo,
     gender,
     country,
+    departamento,
     city,
     zipcode,
   } = formData;
@@ -102,17 +105,8 @@ const EditProfile = () => {
 
   const onSubmit = e => {
     e.preventDefault();
-    dispatch(update_profile({
-      phone_number,
-      about_me,
-      address_line_1,
-      address_line_2,
-      profile_photo,
-      gender,
-      country,
-      city,
-      zipcode,
-    }));
+    console.log('form_data', formData);
+    dispatch(update_profile({username, formData}));
     window.scrollTo(0, 0);
   };
 
@@ -313,6 +307,7 @@ const EditProfile = () => {
                     />
                   </div>
 
+                  {/* Form Fields */}
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
                       Phone:
@@ -356,7 +351,7 @@ const EditProfile = () => {
                       Address Line 1:
                     </label>
                     <div className='mt-1 sm:mt-0 sm:col-span-2'>
-                      <div className='max-w-lg flex  rounded-md shadow-sm'>
+                      <div className='max-w-lg flex rounded-md shadow-sm'>
 
                         <input
                           type='text'
@@ -365,7 +360,7 @@ const EditProfile = () => {
                           onChange={e => onChange(e)}
                           value={address_line_1}
                           required
-                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
+                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500'
                         />
                       </div>
                     </div>
@@ -384,7 +379,7 @@ const EditProfile = () => {
                           placeholder={`${profile && profile.address_line_2}`}
                           onChange={e => onChange(e)}
                           value={address_line_2}
-                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
+                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500'
                         />
                       </div>
                     </div>
@@ -392,16 +387,15 @@ const EditProfile = () => {
 
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
-                      profile_photo:
+                      Profile Photo:
                     </label>
                     <div className='mt-1 sm:mt-0 sm:col-span-2'>
                       <div className='max-w-lg flex rounded-md shadow-sm'>
                         <input
                           type='file'
-                          accept='image/*'
                           name='profile_photo'
+                          accept='image/*'
                           onChange={e => onChange(e)}
-                          value={profile_photo}
                           className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
                         />
                       </div>
@@ -418,10 +412,10 @@ const EditProfile = () => {
                         name='gender'
                         onChange={e => onChange(e)}
                       >
-                        <option value={gender}>{profile && profile.gender}</option>
+                        <option value={gender}>{'Selecciona tu género'}</option>
                         {
                           gender_option && gender_option.map((gender, index) => (
-                            <option key={index} value={gender.value}>{gender.name}</option>
+                            <option key={index} value={gender.name}>{gender.value}</option>
                           ))
                         }
                       </select>
@@ -438,16 +432,35 @@ const EditProfile = () => {
                         name='country'
                         onChange={e => onChange(e)}
                       >
-                        <option value={country}>{profile && profile.country}</option>
+                        <option value={country}>{'Selecciona tu País'}</option>
                         {
                           countries && countries.map((country, index) => (
-                            <option key={index} value={country.name}>{country.name}</option>
+                            <option key={index} value={country.value = country.code}>{country.name}</option>
                           ))
                         }
                       </select>
                     </div>
                   </div>
 
+                  <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
+                    <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
+                      Departamento
+                    </label>
+                    <div className='mt-1 sm:mt-0 sm:col-span-2'>
+                      <div className='max-w-lg flex rounded-md shadow-sm'>
+
+                        <input
+                          type='text'
+                          name='departamento'
+                          placeholder={`${profile && profile.departamento}`}
+                          onChange={e => onChange(e)}
+                          value={departamento}
+                          required
+                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5'>
                     <label htmlFor='username' className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2'>
                       City
@@ -474,7 +487,6 @@ const EditProfile = () => {
                     </label>
                     <div className='mt-1 sm:mt-0 sm:col-span-2'>
                       <div className='max-w-lg flex rounded-md shadow-sm'>
-
                         <input
                           type='text'
                           name='zipcode'
@@ -482,7 +494,7 @@ const EditProfile = () => {
                           onChange={e => onChange(e)}
                           value={zipcode}
                           required
-                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500 pl-3'
+                          className='flex-1 block w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-500'
                         />
                       </div>
                     </div>

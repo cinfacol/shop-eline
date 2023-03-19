@@ -71,7 +71,10 @@ class UpdateProfileAPIView(APIView):
         serializer = UpdateProfileSerializer(
             instance=request.user.profile, data=data, partial=True
         )
+        print("data", data)
+        print("serializer", serializer)
 
         serializer.is_valid()
         serializer.save()
+        print("serializer_data", serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)

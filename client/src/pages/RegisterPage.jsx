@@ -14,13 +14,11 @@ const RegisterPage = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { user, isLoading, isError, isSuccess, message } = useSelector(
+	const { user, isLoading, isError, isLoggedIn, isSuccess, message } = useSelector(
 		(state) => state.auth
 	);
 
-  const isLogged = useSelector((state) => state.auth.isLoggedIn);
-
-	const usuario = isLogged && user.first_name;
+	const usuario = isLoggedIn && user.first_name;
 
 	useEffect(() => {
 		if (isError) {

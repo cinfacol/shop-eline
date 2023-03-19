@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
@@ -6,9 +6,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.common.models import TimeStampedUUIDModel
 
-# from apps.orders.countries import Countries
-
-User = get_user_model()
+User = settings.AUTH_USER_MODEL
 
 
 class Gender(models.TextChoices):
@@ -25,21 +23,21 @@ class VerificationType(models.TextChoices):
 class Profile(TimeStampedUUIDModel):
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     phone_number = PhoneNumberField(
-        verbose_name=_("Phone Number"),
-        max_length=30,
-        region="CO",
-        default="+573242042421",
+        verbose_name=_("Phone Number"), max_length=30, default="+573142544178"
     )
     about_me = models.TextField(
-        verbose_name=_("About me"), default=_("say something about yourself")
+        verbose_name=_("About me"), default="say something about yourself"
     )
     address_line_1 = models.CharField(max_length=255, default="")
     address_line_2 = models.CharField(max_length=255, default="", blank=True, null=True)
     license = models.CharField(
-        verbose_name=_("Shop Eline license"), max_length=20, blank=True, null=True
+        verbose_name=_("Real Estate license"), max_length=20, blank=True, null=True
     )
     profile_photo = models.ImageField(
-        verbose_name=_("Profile Photo"), default="/profile_default.png"
+        verbose_name=_("Profile Photo"),
+        default="/profile_default.png",
+        blank=True,
+        null=True,
     )
     gender = models.CharField(
         verbose_name=_("Gender"),
@@ -59,7 +57,14 @@ class Profile(TimeStampedUUIDModel):
     city = models.CharField(
         verbose_name=_("City"),
         max_length=180,
-        default="Medellín",
+        default="Cali",
+        blank=False,
+        null=False,
+    )
+    departamento = models.CharField(
+        verbose_name=_("Departamento"),
+        max_length=180,
+        default="Valle del Cauca",
         blank=False,
         null=False,
     )
@@ -67,12 +72,12 @@ class Profile(TimeStampedUUIDModel):
     is_buyer = models.BooleanField(
         verbose_name=_("Buyer"),
         default=False,
-        help_text=_("Are you looking to Buy a Product?"),
+        help_text=_("Are you looking to Buy a Property?"),
     )
     is_seller = models.BooleanField(
         verbose_name=_("Seller"),
         default=False,
-        help_text=_("Are you looking to sell a product?"),
+        help_text=_("Are you looking to sell a property?"),
     )
     is_agent = models.BooleanField(
         verbose_name=_("Agent"), default=False, help_text=_("Are you an agent?")

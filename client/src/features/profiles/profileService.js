@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const PROFILE_API_URL = "api/profile/me/"
-const UPDATE_PROFILE_API_URL = "api/profile/update"
+// const UPDATE_PROFILE_API_URL = "api/profile/update/"
 
 export const getProfile = createAsyncThunk(
   "profile/get_profile",
@@ -39,7 +39,8 @@ export const getProfile = createAsyncThunk(
 
 export const update_profile = createAsyncThunk(
   'profile/update_profile',
-  async ({ phone_number, about_me, address_line_1, address_line_2, profile_photo, gender, country, city, zipcode }, thunkAPI) => {
+  async ( {username, formData} , thunkAPI) => {
+    console.log('async_formData', formData);
     if (localStorage.getItem('access')) {
       const config = {
         headers: {
@@ -49,21 +50,9 @@ export const update_profile = createAsyncThunk(
         }
       };
 
-      const body = JSON.stringify({
-        phone_number,
-        about_me,
-        address_line_1,
-        address_line_2,
-        profile_photo,
-        gender,
-        country,
-        city,
-        zipcode,
-      });
-
       try {
-        console.log('body', body);
-        const response = await axios.patch(UPDATE_PROFILE_API_URL, body, config);
+        const response = await axios.patch(`api/profile/update/${username}/`, formData, config);
+        console.log('response', response);
         if (response.status === 200 && !response.data.error) {
           return response.data;
         } else {
