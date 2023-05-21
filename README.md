@@ -38,3 +38,42 @@ $ mkdir estate-src && cd estate-src
 ```
 
 Creamos el entorno virtual
+```bash
+django-real-estate/state-src $ pipenv shell
+```
+Una vez creadas las carpetas correspondientes creamos un repositorio con el nombre del proyecto y el .gitignore de python o lo podemos copiar de "https://www.toptal.com/developers/gitignore/api/python"
+
+Inicializamos el git y finalmente abrimos el proyecto en vs code.
+
+```bash
+$ git init
+$ git remote add origin https://github.com/<nombre-proyecto>.git
+$ git remote -v
+$ code .
+```
+En la raiz del proyecto creamos el archivo "requirements.txt" y listamos las dependencias que vamos a necesitar.
+* Django
+* djangorestframework
+* django-environ
+* django-filter
+* django-autoslug
+* django-countries
+* Pillow
+* django-phonenumber-field
+* phonenumbers
+* psycopg2-binary
+* flake8
+* black
+* isort
+
+en la terminal, instalamos los paquetes listados en el archivo requirements.txt
+
+```bash
+$ pip install -r requirements.txt
+```
+para actualizar pip
+
+```bash
+$ pip install --upgrade pip
+```
+(minuto 08:18 del primer video)
