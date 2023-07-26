@@ -1,4 +1,4 @@
-ARG NODE_VERSION=19.6.0-alpine3.17
+ARG NODE_VERSION=18.17.0-alpine
 
 FROM node:${NODE_VERSION} as node
 
